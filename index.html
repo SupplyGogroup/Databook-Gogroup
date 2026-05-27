@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supply Intelligence · Supply Chain Data Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-dark: #0f0f0f;
+    --bg-light: #f7f6f3;
+    --bg-white: #ffffff;
+    --orange: #e8640c;
+    --orange-dim: rgba(232,100,12,0.10);
+    --orange-border: rgba(232,100,12,0.30);
+    --text-white: #f0ede8;
+    --text-muted: #888880;
+    --text-body: #2c2c2a;
+    --text-secondary: #5f5e5a;
+    --border-dark: rgba(255,255,255,0.08);
+    --border-light: rgba(0,0,0,0.08);
+    --font: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+  body { font-family: var(--font); background: var(--bg-light); color: var(--text-body); line-height: 1.6; }
+ 
+  /* HERO */
+  .hero { background: var(--bg-dark); padding: 48px 56px 0; position: relative; }
+  .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--orange); }
+  .hero-eyebrow { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; }
+  .hero-eyebrow::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+  .hero-title { font-size: 40px; font-weight: 300; color: var(--text-white); letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 4px; }
+  .hero-subtitle { font-size: 40px; font-weight: 300; color: var(--orange); font-style: italic; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 20px; }
+  .hero-desc { font-size: 13px; color: var(--text-muted); max-width: 520px; line-height: 1.7; margin-bottom: 40px; }
+  .hero-stats { display: flex; border-top: 0.5px solid var(--border-dark); }
+  .hero-stat { padding: 20px 32px 20px 0; margin-right: 32px; border-right: 0.5px solid var(--border-dark); }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+  .hero-stat-value { font-size: 15px; font-weight: 500; color: var(--text-white); }
+ 
+  .main { padding: 48px 56px; }
+ 
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-label::after { content: ''; flex: 1; height: 0.5px; background: var(--border-light); }
+ 
+  /* ARCH — expanded with items */
+  .arch-flow { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1fr; gap: 0; align-items: start; margin-bottom: 48px; }
+  .arch-arrow { display: flex; align-items: center; justify-content: center; padding-top: 20px; color: var(--orange); font-size: 18px; }
+  .arch-block { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 8px; overflow: hidden; }
+  .arch-block-header { background: var(--bg-dark); padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px; }
+  .arch-num { width: 22px; height: 22px; border-radius: 50%; background: var(--orange); color: #fff; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .arch-block-title { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-white); line-height: 1.4; }
+  .arch-block-body { padding: 12px 16px; }
+  .arch-block-desc { font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.5; padding-bottom: 10px; border-bottom: 0.5px solid var(--border-light); }
+  .arch-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 0.5px solid var(--border-light); }
+  .arch-item:last-child { border-bottom: none; }
+  .arch-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 6px; }
+  .arch-dot.wip { background: var(--text-muted); }
+  .arch-item-content { flex: 1; }
+  .arch-item-name { font-size: 12px; font-weight: 500; color: var(--text-body); line-height: 1.3; }
+  .arch-item-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 1px; }
+  .arch-item-wip { font-size: 10px; color: var(--text-muted); border: 0.5px dashed var(--border-light); padding: 1px 6px; border-radius: 10px; display: inline-block; margin-top: 3px; }
+ 
+  /* SOURCES */
+  .sources-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 48px; }
+  .source-card { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 8px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
+  .source-icon { width: 36px; height: 36px; border-radius: 6px; background: var(--bg-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--orange); font-size: 11px; font-weight: 500; font-family: var(--mono); }
+  .source-name { font-size: 13px; font-weight: 500; color: var(--text-body); margin-bottom: 3px; }
+  .source-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+  .source-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 9px; font-size: 11px; color: var(--orange); text-decoration: none; border-bottom: 0.5px solid var(--orange-border); padding-bottom: 1px; }
+  .source-link:hover { opacity: 0.8; }
+  .status-tag { display: inline-flex; align-items: center; margin-top: 9px; font-size: 11px; color: var(--text-muted); border: 0.5px dashed var(--border-light); padding: 2px 9px; border-radius: 20px; background: var(--bg-light); }
+ 
+  /* DOCS */
+  .docs-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
+  .doc-row { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
+  .doc-row.master { background: var(--bg-dark); border-color: var(--orange-border); border-left: 3px solid var(--orange); }
+  .doc-row.wip { opacity: 0.55; border-style: dashed; }
+  .doc-icon { font-size: 15px; color: var(--orange); }
+  .doc-name { font-size: 13px; font-weight: 500; color: var(--text-body); flex: 1; }
+  .doc-row.master .doc-name { color: var(--text-white); }
+  .doc-meta { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+  .doc-row.master .doc-meta { color: var(--text-muted); }
+  .doc-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; background: var(--orange-dim); color: var(--orange); border: 0.5px solid var(--orange-border); white-space: nowrap; }
+  .doc-badge.master { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .doc-badge.wip { background: transparent; color: var(--text-muted); border-color: var(--border-light); }
+  .doc-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--orange); text-decoration: none; border-bottom: 0.5px solid var(--orange-border); padding-bottom: 1px; margin-top: 4px; }
+  .doc-link:hover { opacity: 0.8; }
+ 
+  /* GROUP BLOCK */
+  .group-block { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 10px; overflow: hidden; }
+  .master-group { background: var(--bg-dark) !important; border-color: var(--orange-border) !important; border-left: 3px solid var(--orange); }
+  .master-group-header { background: var(--bg-dark) !important; }
+  .master-group-header:hover { background: #1a1a1a !important; }
+  .master-group .child-row { background: #1e1e1e; border-color: rgba(255,255,255,0.07); }
+  .master-group .child-name { color: var(--text-white); }
+  .master-group .child-desc { color: var(--text-muted); }
+  .group-header { display: flex; align-items: center; gap: 14px; padding: 14px 18px; cursor: pointer; user-select: none; transition: background 0.15s; }
+  .group-header:hover { background: #f2f1ee; }
+  .group-header-icon { font-size: 15px; color: var(--orange); }
+  .group-header-info { flex: 1; }
+  .group-header-name { font-size: 13px; font-weight: 500; color: var(--text-body); }
+  .group-header-meta { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+  .group-chevron { font-size: 13px; color: var(--text-muted); transition: transform 0.2s; display: inline-block; }
+  .group-children { display: none; border-top: 0.5px solid var(--border-light); padding: 12px 14px; flex-direction: column; gap: 8px; }
+  .group-children.visible { display: flex; }
+  .child-row { background: var(--bg-light); border: 0.5px solid var(--border-light); border-radius: 7px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px; }
+  .child-icon { font-size: 13px; color: var(--orange); margin-top: 1px; flex-shrink: 0; }
+  .child-name { font-size: 12px; font-weight: 500; color: var(--text-body); margin-bottom: 2px; }
+  .child-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+  .child-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; background: var(--orange-dim); color: var(--orange); border: 0.5px solid var(--orange-border); white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+ 
+  footer { background: var(--bg-dark); padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; border-top: 0.5px solid var(--border-dark); }
+  .footer-brand { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .footer-brand span { color: var(--orange); font-weight: 500; }
+  .footer-version { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+ 
+<header class="hero">
+  <div class="hero-eyebrow">Supply Intelligence · Gogroup</div>
+  <div class="hero-title">Data Book</div>
+  <div class="hero-subtitle">Supply Chain</div>
+  <p class="hero-desc">Centralized reference document consolidating all data sources, relational bases, and analytical deliverables for the Gogroup supply chain operation. Single source of truth for planning, purchasing, and intelligence workflows.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-label">Company</div><div class="hero-stat-value">Gogroup</div></div>
+    <div class="hero-stat"><div class="hero-stat-label">Brands</div><div class="hero-stat-value">8 total</div></div>
+  </div>
+</header>
+ 
+<main class="main">
+ 
+  <!-- ═══════════════════ GOCASE ═══════════════════ -->
+  <div class="section-label">Arquitetura Gocase</div>
+  <div class="arch-flow">
+    <div class="arch-block">
+      <div class="arch-block-header"><div class="arch-num">1</div><div class="arch-block-title">Information sources</div></div>
+      <div class="arch-block-body">
+        <div class="arch-block-desc">Raw operational data feeding the supply chain pipeline.</div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Sales — Metabase</div><div class="arch-item-desc">Sales and order data from Metabase.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock — WMS</div><div class="arch-item-desc">Warehouse stock and operations data.</div></div></div>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">
+      <div class="arch-block-header"><div class="arch-num">2</div><div class="arch-block-title">Supply chain databases</div></div>
+      <div class="arch-block-body">
+        <div class="arch-block-desc">Integrated, treated, and consolidated into a single reliable base.</div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Sales Refined</div><div class="arch-item-desc">Business rules applied, channel and SKU normalization.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Forecast</div><div class="arch-item-desc">Demand projections by channel and SKU.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Auxiliary (depara)</div><div class="arch-item-desc">Cross-reference and mapping tables.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Fup Importações</div><div class="arch-item-desc">Import follow-up and PO tracking.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock</div><div class="arch-item-desc">Consolidated stock position base.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock &amp; forecast history</div><div class="arch-item-desc">Historical snapshots for accuracy and seasonality.</div></div></div>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">
+      <div class="arch-block-header"><div class="arch-num">3</div><div class="arch-block-title">Business intelligence</div></div>
+      <div class="arch-block-body">
+        <div class="arch-block-desc">Analyses and insights to support decisions and optimize performance.</div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Overview — Sales</div><div class="arch-item-desc">Revenue and volume by brand, channel, SKU.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">ABC / Slow moving</div><div class="arch-item-desc">Inventory health classification by consumption rate.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock flow</div><div class="arch-item-desc">Orders impact, DOH projection, rupture scenarios.</div></div></div>
+        <div class="arch-item"><div class="arch-dot wip"></div><div class="arch-item-content"><div class="arch-item-name" style="color:var(--text-secondary)">Torre de Controle</div><div class="arch-item-desc">Cross-brand control tower.</div><span class="arch-item-wip">In construction</span></div></div>
+        <div class="arch-item"><div class="arch-dot wip"></div><div class="arch-item-content"><div class="arch-item-name" style="color:var(--text-secondary)">Agentes Especialistas</div><div class="arch-item-desc">Autonomous AI agents by supply chain domain.</div><span class="arch-item-wip">In construction</span></div></div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- DATA GOCASE -->
+  <div class="section-label">Data Gocase</div>
+  <div class="sources-grid" style="margin-bottom:48px">
+    <div class="source-card">
+      <div class="source-icon">SL</div>
+      <div>
+        <div class="source-name">Sales — Metabase Raw Data</div>
+        <div class="source-desc">Raw sales transactions extracted directly from Metabase — order-level data before any business rule treatment, covering all channels and SKUs.</div>
+        <a href="https://metabase.gocase.com.br/question/11066-br-vendas-on?interval=" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">ST</div>
+      <div>
+        <div class="source-name">Stock — WMS Raw Data</div>
+        <div class="source-desc">Raw stock positions extracted from WMS — warehouse-level inventory snapshots before transformation, covering available, reserved, and in-transit quantities.</div>
+        <a href="https://docs.google.com/spreadsheets/d/1pg-bK39WJQIT0c0QIsTYAdxhgrb2g7BCU3VTQ4N5cgg/edit?gid=1031273896#gid=1031273896" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">SR</div>
+      <div>
+        <div class="source-name">Sales Refined</div>
+        <div class="source-desc">Treated sales base with business rules applied — channel classification, SKU normalization, return filtering, and revenue consolidation ready for analytical consumption.</div>
+        <a href="https://metabase.gocase.com.br/question/25681-supply-sales" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">FC</div>
+      <div>
+        <div class="source-name">Forecast</div>
+        <div class="source-desc">Demand forecast broken down by Varejo, Atacado, and Marketplace channels — statistical projections used as input for replenishment and stock flow planning.</div>
+        <a href="https://docs.google.com/spreadsheets/d/14I4uoexKnTOYRux-iPGwi3z9QQuhmUvx9ap8U0baljY/edit?gid=387566950#gid=387566950" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">DP</div>
+      <div>
+        <div class="source-name">Auxiliary (depara)</div>
+        <div class="source-desc">Cross-reference and mapping tables linking SKU codes, product descriptions, and channel identifiers across Gocase's operational systems.</div>
+        <a href="https://docs.google.com/spreadsheets/d/1eh-5Q_cypxrgNL_gsLu3M6BMlVu_j9qbEJib9A0efMI/edit?gid=0#gid=0" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">HX</div>
+      <div>
+        <div class="source-name">Stock &amp; forecast history</div>
+        <div class="source-desc">Historical stock positions and forecast snapshots — used for accuracy tracking, seasonality modeling, and retrospective performance analysis.</div>
+        <a href="https://docs.google.com/spreadsheets/d/16Hy2O8-FQENCeBCxWDjB3y6clOc4s0hooltDULYyhQc/edit?gid=1860228585#gid=1860228585" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ═══════════════════ GOBEAUTE ═══════════════════ -->
+  <div class="section-label">Arquitetura Gobeaute</div>
+  <div class="arch-flow">
+    <div class="arch-block">
+      <div class="arch-block-header"><div class="arch-num">1</div><div class="arch-block-title">Information sources</div></div>
+      <div class="arch-block-body">
+        <div class="arch-block-desc">Raw operational data feeding the supply chain pipeline.</div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Sales — Bling, Tiny, Protheus</div><div class="arch-item-desc">Multi-system sales data across all Gobeaute brands.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock — Titan, Bling, Estoca, Bralog</div><div class="arch-item-desc">Stock and operations data across warehouse and fulfillment partners.</div></div></div>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">
+      <div class="arch-block-header"><div class="arch-num">2</div><div class="arch-block-title">Supply chain databases</div></div>
+      <div class="arch-block-body">
+        <div class="arch-block-desc">Integrated, treated, and consolidated into a single reliable base.</div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Sales Refined</div><div class="arch-item-desc">Business rules applied, channel and SKU normalization.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Forecast</div><div class="arch-item-desc">Demand projections by channel and SKU.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Auxiliary (depara)</div><div class="arch-item-desc">Brand and channel mapping tables.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock</div><div class="arch-item-desc">Consolidated stock position base.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock &amp; forecast history</div><div class="arch-item-desc">Historical snapshots for accuracy and seasonality.</div></div></div>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">
+      <div class="arch-block-header"><div class="arch-num">3</div><div class="arch-block-title">Business intelligence</div></div>
+      <div class="arch-block-body">
+        <div class="arch-block-desc">Analyses and insights to support decisions and optimize performance.</div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Overview — Sales</div><div class="arch-item-desc">Revenue and volume by brand, channel, SKU.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">ABC / Slow moving</div><div class="arch-item-desc">Inventory health classification by consumption rate.</div></div></div>
+        <div class="arch-item"><div class="arch-dot"></div><div class="arch-item-content"><div class="arch-item-name">Stock flow</div><div class="arch-item-desc">Orders impact, DOH projection, rupture scenarios.</div></div></div>
+        <div class="arch-item"><div class="arch-dot wip"></div><div class="arch-item-content"><div class="arch-item-name" style="color:var(--text-secondary)">Torre de Controle</div><div class="arch-item-desc">Cross-brand control tower.</div><span class="arch-item-wip">In construction</span></div></div>
+        <div class="arch-item"><div class="arch-dot wip"></div><div class="arch-item-content"><div class="arch-item-name" style="color:var(--text-secondary)">Agentes Especialistas</div><div class="arch-item-desc">Autonomous AI agents by supply chain domain.</div><span class="arch-item-wip">In construction</span></div></div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- BASES GOBEAUTE -->
+  <div class="section-label">Bases Gobeaute</div>
+  <div class="sources-grid" style="margin-bottom:48px">
+    <div class="source-card">
+      <div class="source-icon">PO</div>
+      <div>
+        <div class="source-name">Orders</div>
+        <div class="source-desc">Purchase orders, open POs, supplier lead times, and import follow-up across all Gobeaute brands and sourcing channels.</div>
+        <a href="https://docs.google.com/spreadsheets/d/13Az1KC5LEYTDr2Zp3oyW_Ti6Ep1lBU9u/edit?gid=1222347250#gid=1222347250" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">$</div>
+      <div>
+        <div class="source-name">Costs</div>
+        <div class="source-desc">Unit costs, landed costs, duty and freight breakdowns, and pricing structure per SKU — input for margin and replenishment calculations.</div>
+        <a href="https://docs.google.com/spreadsheets/d/1Oh-3Pa5Bz02eQazMDcjI3bO1emc_O0FCqHcQ9s1DB6w/edit?gid=0#gid=0" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">FC</div>
+      <div>
+        <div class="source-name">Forecast</div>
+        <div class="source-desc">Statistical and AI-assisted demand projections segmented by SKU, brand, and sales channel, with short and mid-term horizons.</div>
+        <a href="https://docs.google.com/spreadsheets/d/1J1SLU7XIKkwYKeMwI2vZ8DKdkTEa__Lo/edit?gid=1850355541#gid=1850355541" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">DB</div>
+      <div>
+        <div class="source-name">Relational base</div>
+        <div class="source-desc">SKU master table, depara mapping, brand and channel classification dictionaries — backbone for all cross-system data joins.</div>
+        <a href="https://docs.google.com/spreadsheets/d/1bSEMw3fpo56DfCGoQiQwOW09FDXCrryh/edit?gid=1857478807#gid=1857478807" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">ST</div>
+      <div>
+        <div class="source-name">Stock folder</div>
+        <div class="source-desc">Consolidated stock position files — WMS extractions, processed workbooks, and DOH snapshots organized by brand and warehouse location.</div>
+        <a href="https://drive.google.com/drive/folders/1K3SLoRihEz3xFgHFnCJJI5ahzuoyjOfe?usp=drive_link" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+    <div class="source-card">
+      <div class="source-icon">SL</div>
+      <div>
+        <div class="source-name">Sales folder</div>
+        <div class="source-desc">Bling, Tiny, and Protheus consolidated sales extractions — standardized across channels (Marketplace, Atacado, Varejo) and brands.</div>
+        <a href="https://drive.google.com/drive/folders/1NtcQF5-LnRRmBduLOHMKGOb_HmMtq467?usp=drive_link" class="source-link" target="_blank">Open ↗</a>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ═══════════════════ BASES MESTRAS ═══════════════════ -->
+  <div class="section-label">Bases Mestras</div>
+  <div class="docs-list">
+ 
+    <div class="doc-row master">
+      <div class="doc-icon">★</div>
+      <div style="flex:1">
+        <div class="doc-name">Sortimento Gobeaute</div>
+        <div class="doc-meta">Master assortment document · Multi-brand · Multi-channel · Gobeaute</div>
+        <a href="https://docs.google.com/spreadsheets/d/1_WdR8wQbGWYz15w_UneeXDXQ-nHKGpbwJLCU6afHdAk/edit?gid=1977411709#gid=1977411709" class="doc-link" target="_blank">Open document ↗</a>
+      </div>
+      <div class="doc-badge master">Data Book</div>
+    </div>
+ 
+    <div class="doc-row master">
+      <div class="doc-icon">★</div>
+      <div style="flex:1">
+        <div class="doc-name">Sortimento Gocase</div>
+        <div class="doc-meta">Master assortment document · Gocase main brand · All channels</div>
+        <a href="https://docs.google.com/spreadsheets/d/1FdmE1CvAusXk3DwjfhyKZ8acF1xLzczlzhaPH3-ack8/edit?gid=0#gid=0" class="doc-link" target="_blank">Open document ↗</a>
+      </div>
+      <div class="doc-badge master">Data Book</div>
+    </div>
+ 
+    <div class="group-block master-group" id="group-gocase">
+      <div class="group-header master-group-header" onclick="toggleGroup('gocase')">
+        <div class="group-header-icon" style="color:var(--orange)">★</div>
+        <div class="group-header-info">
+          <div class="group-header-name" style="color:var(--text-white)">Analytics Gocase</div>
+          <div class="group-header-meta" style="color:var(--text-muted)">Sales overview · Stock flow · ABC curve · TicketSense · Stockie copilot — click to expand</div>
+          <a href="https://docs.google.com/spreadsheets/d/1mHnQXMOLom4QPQ9dZOUi48XCbK9rU-LSEJWKVTpevPQ/edit?gid=1023803238#gid=1023803238" class="doc-link" target="_blank">Open document ↗</a>
+        </div>
+        <div class="doc-badge master" style="margin-right:10px">Data Book</div>
+        <div class="group-chevron" id="chevron-gocase" style="color:var(--text-muted)">▾</div>
+      </div>
+      <div class="group-children" id="children-gocase" style="background:var(--bg-dark); border-top-color:rgba(255,255,255,0.08)">
+        <div class="child-row">
+          <div class="child-icon">▤</div>
+          <div style="flex:1">
+            <div class="child-name">Overview — Sales</div>
+            <div class="child-desc">Revenue and volume breakdown by brand, channel, and SKU. Covers gross sales, returns, net revenue, and period-over-period comparisons. Available in Line and SKU granularity.</div>
+          </div>
+          <div class="child-badge">Analytics</div>
+        </div>
+        <div class="child-row">
+          <div class="child-icon">▣</div>
+          <div style="flex:1">
+            <div class="child-name">ABC curve &amp; slow moving</div>
+            <div class="child-desc">Inventory health classification (A/B/C) by consumption rate across all active Gocase SKUs. Identifies slow-moving items and overstock risk to support markdown and clearance decisions.</div>
+          </div>
+          <div class="child-badge">Analytics</div>
+        </div>
+        <div class="child-row">
+          <div class="child-icon">▦</div>
+          <div style="flex:1">
+            <div class="child-name">Stock flow projection</div>
+            <div class="child-desc">PO impact simulation, rupture risk scenarios, and DOH forward projection by SKU. Enables proactive replenishment decisions with visual stock curve modeling. Line and SKU views available.</div>
+          </div>
+          <div class="child-badge">Planning</div>
+        </div>
+        <div class="child-row">
+          <div class="child-icon">◈</div>
+          <div style="flex:1">
+            <div class="child-name">TicketSense</div>
+            <div class="child-desc">Average ticket analysis and channel-level pricing intelligence. Tracks promotional impact on revenue per order, identifies pricing anomalies, and supports post-event margin diagnosis.</div>
+          </div>
+          <div class="child-badge">Analytics</div>
+        </div>
+        <div class="child-row">
+          <div class="child-icon">⬡</div>
+          <div style="flex:1">
+            <div class="child-name">Stockie copilot</div>
+            <div class="child-desc">AI-powered supply chain assistant — surfaces replenishment alerts, rupture risk signals, and inventory action recommendations based on real-time stock and forecast data.</div>
+          </div>
+          <div class="child-badge">AI</div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="doc-row master">
+      <div class="doc-icon">★</div>
+      <div style="flex:1">
+        <div class="doc-name">Controle de Importações</div>
+        <div class="doc-meta">Import tracking master document · PO status · Lead times · Customs &amp; logistics follow-up</div>
+        <a href="https://gocasebr.sharepoint.com/:x:/r/sites/SupplyChain/_layouts/15/Doc.aspx?sourcedoc=%7B84179DD6-4EDF-4052-8C45-2A2A17684A8C%7D&file=Controle%20de%20Importa%C3%A7%C3%B5es.xlsx&action=default&mobileredirect=true" class="doc-link" target="_blank">Open document ↗</a>
+      </div>
+      <div class="doc-badge master">Data Book</div>
+    </div>
+ 
+    <div class="doc-row wip">
+      <div class="doc-icon" style="color:var(--text-muted)">⬡</div>
+      <div style="flex:1">
+        <div class="doc-name" style="color:var(--text-secondary)">Torre de Controle</div>
+        <div class="doc-meta">Centralized control tower · Cross-brand visibility · Gogroup macro view</div>
+      </div>
+      <div class="doc-badge wip">In construction</div>
+    </div>
+ 
+    <div class="doc-row wip">
+      <div class="doc-icon" style="color:var(--text-muted)">◎</div>
+      <div style="flex:1">
+        <div class="doc-name" style="color:var(--text-secondary)">Agentes Especialistas</div>
+        <div class="doc-meta">Autonomous AI agents specialized by supply chain domain — demand, replenishment, pricing, and rupture prevention</div>
+      </div>
+      <div class="doc-badge wip">In construction</div>
+    </div>
+ 
+  </div>
+ 
+</main>
+ 
+<footer>
+  <div class="footer-brand"><span>Supply Intelligence</span> · Gogroup · Gobeaute</div>
+  <div class="footer-version">Supply Chain Data Book v1.0 · 2026</div>
+</footer>
+ 
+<script>
+  function toggleGroup(id) {
+    const children = document.getElementById('children-' + id);
+    const chevron = document.getElementById('chevron-' + id);
+    const isOpen = children.classList.contains('visible');
+    if (isOpen) {
+      children.classList.remove('visible');
+      chevron.style.transform = 'rotate(0deg)';
+    } else {
+      children.classList.add('visible');
+      chevron.style.transform = 'rotate(180deg)';
+    }
+  }
+</script>
+</body>
+</html>
