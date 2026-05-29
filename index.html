@@ -25,7 +25,7 @@
     --mono: 'DM Mono', monospace;
   }
   body { font-family: var(--font); background: var(--bg-light); color: var(--text-body); line-height: 1.6; }
- 
+
   /* HERO */
   .hero { background: var(--bg-dark); padding: 48px 56px 0; position: relative; }
   .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--orange); }
@@ -39,12 +39,12 @@
   .hero-stat:last-child { border-right: none; }
   .hero-stat-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
   .hero-stat-value { font-size: 15px; font-weight: 500; color: var(--text-white); }
- 
+
   .main { padding: 48px 56px; }
- 
+
   .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
   .section-label::after { content: ''; flex: 1; height: 0.5px; background: var(--border-light); }
- 
+
   /* ARCH — expanded with items */
   .arch-flow { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1fr; gap: 0; align-items: start; margin-bottom: 48px; }
   .arch-arrow { display: flex; align-items: center; justify-content: center; padding-top: 20px; color: var(--orange); font-size: 18px; }
@@ -62,7 +62,7 @@
   .arch-item-name { font-size: 12px; font-weight: 500; color: var(--text-body); line-height: 1.3; }
   .arch-item-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 1px; }
   .arch-item-wip { font-size: 10px; color: var(--text-muted); border: 0.5px dashed var(--border-light); padding: 1px 6px; border-radius: 10px; display: inline-block; margin-top: 3px; }
- 
+
   /* SOURCES */
   .sources-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 48px; }
   .source-card { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 8px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
@@ -72,7 +72,7 @@
   .source-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 9px; font-size: 11px; color: var(--orange); text-decoration: none; border-bottom: 0.5px solid var(--orange-border); padding-bottom: 1px; }
   .source-link:hover { opacity: 0.8; }
   .status-tag { display: inline-flex; align-items: center; margin-top: 9px; font-size: 11px; color: var(--text-muted); border: 0.5px dashed var(--border-light); padding: 2px 9px; border-radius: 20px; background: var(--bg-light); }
- 
+
   /* DOCS */
   .docs-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 48px; }
   .doc-row { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
@@ -88,7 +88,7 @@
   .doc-badge.wip { background: transparent; color: var(--text-muted); border-color: var(--border-light); }
   .doc-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--orange); text-decoration: none; border-bottom: 0.5px solid var(--orange-border); padding-bottom: 1px; margin-top: 4px; }
   .doc-link:hover { opacity: 0.8; }
- 
+
   /* GROUP BLOCK */
   .group-block { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: 10px; overflow: hidden; }
   .master-group { background: var(--bg-dark) !important; border-color: var(--orange-border) !important; border-left: 3px solid var(--orange); }
@@ -111,7 +111,65 @@
   .child-name { font-size: 12px; font-weight: 500; color: var(--text-body); margin-bottom: 2px; }
   .child-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
   .child-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; background: var(--orange-dim); color: var(--orange); border: 0.5px solid var(--orange-border); white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
- 
+
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero { padding: 36px 32px 0; }
+    .main { padding: 36px 32px; }
+    footer { padding: 18px 32px; }
+    .hero-title, .hero-subtitle { font-size: 32px; }
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 28px 20px 0; }
+    .main { padding: 28px 20px; }
+    footer { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 6px; }
+    .hero-title, .hero-subtitle { font-size: 26px; }
+    .hero-desc { font-size: 12px; margin-bottom: 28px; }
+    .hero-stats { flex-wrap: wrap; gap: 0; }
+    .hero-stat { padding: 14px 20px 14px 0; margin-right: 20px; }
+
+    /* Arch flow — stack vertically */
+    .arch-flow {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .arch-arrow {
+      padding: 6px 0;
+      font-size: 16px;
+      transform: rotate(90deg);
+    }
+
+    /* Sources — single column */
+    .sources-grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* Docs */
+    .doc-row { flex-wrap: wrap; gap: 10px; }
+    .doc-badge { align-self: flex-start; }
+
+    /* Group header */
+    .group-header { flex-wrap: wrap; gap: 8px; }
+    .group-chevron { margin-left: auto; }
+
+    /* Hero stat border cleanup */
+    .hero-stat:nth-child(2) { border-right: none; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title, .hero-subtitle { font-size: 22px; }
+    .hero-stat { padding: 12px 16px 12px 0; margin-right: 16px; }
+    .hero-stat-value { font-size: 13px; }
+    .source-card { flex-direction: column; gap: 10px; }
+    .source-icon { width: 30px; height: 30px; font-size: 10px; }
+    .arch-block-header { padding: 12px 14px; }
+    .arch-block-body { padding: 10px 14px; }
+    .doc-row { padding: 12px 14px; }
+    .group-header { padding: 12px 14px; }
+  }
+
   footer { background: var(--bg-dark); padding: 20px 56px; display: flex; align-items: center; justify-content: space-between; border-top: 0.5px solid var(--border-dark); }
   .footer-brand { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
   .footer-brand span { color: var(--orange); font-weight: 500; }
@@ -119,7 +177,7 @@
 </style>
 </head>
 <body>
- 
+
 <header class="hero">
   <div class="hero-eyebrow">Supply Intelligence · Gogroup</div>
   <div class="hero-title">Data Book</div>
@@ -130,9 +188,9 @@
     <div class="hero-stat"><div class="hero-stat-label">Brands</div><div class="hero-stat-value">8 total</div></div>
   </div>
 </header>
- 
+
 <main class="main">
- 
+
   <!-- ═══════════════════ GOCASE ═══════════════════ -->
   <div class="section-label">Arquitetura Gocase</div>
   <div class="arch-flow">
@@ -170,7 +228,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- DATA GOCASE -->
   <div class="section-label">Data Gocase</div>
   <div class="sources-grid" style="margin-bottom:48px">
@@ -223,7 +281,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- ═══════════════════ GOBEAUTE ═══════════════════ -->
   <div class="section-label">Arquitetura Gobeaute</div>
   <div class="arch-flow">
@@ -260,7 +318,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- BASES GOBEAUTE -->
   <div class="section-label">Bases Gobeaute</div>
   <div class="sources-grid" style="margin-bottom:48px">
@@ -313,11 +371,11 @@
       </div>
     </div>
   </div>
- 
+
   <!-- ═══════════════════ BASES MESTRAS ═══════════════════ -->
   <div class="section-label">Bases Mestras</div>
   <div class="docs-list">
- 
+
     <div class="doc-row master">
       <div class="doc-icon">★</div>
       <div style="flex:1">
@@ -327,7 +385,7 @@
       </div>
       <div class="doc-badge master">Data Book</div>
     </div>
- 
+
     <div class="doc-row master">
       <div class="doc-icon">★</div>
       <div style="flex:1">
@@ -337,7 +395,7 @@
       </div>
       <div class="doc-badge master">Data Book</div>
     </div>
- 
+
     <div class="group-block master-group" id="group-gocase">
       <div class="group-header master-group-header" onclick="toggleGroup('gocase')">
         <div class="group-header-icon" style="color:var(--orange)">★</div>
@@ -392,7 +450,7 @@
         </div>
       </div>
     </div>
- 
+
     <div class="doc-row master">
       <div class="doc-icon">★</div>
       <div style="flex:1">
@@ -402,7 +460,7 @@
       </div>
       <div class="doc-badge master">Data Book</div>
     </div>
- 
+
     <div class="doc-row wip">
       <div class="doc-icon" style="color:var(--text-muted)">⬡</div>
       <div style="flex:1">
@@ -411,7 +469,7 @@
       </div>
       <div class="doc-badge wip">In construction</div>
     </div>
- 
+
     <div class="doc-row wip">
       <div class="doc-icon" style="color:var(--text-muted)">◎</div>
       <div style="flex:1">
@@ -420,16 +478,16 @@
       </div>
       <div class="doc-badge wip">In construction</div>
     </div>
- 
+
   </div>
- 
+
 </main>
- 
+
 <footer>
   <div class="footer-brand"><span>Supply Intelligence</span> · Gogroup · Gobeaute</div>
   <div class="footer-version">Supply Chain Data Book v1.0 · 2026</div>
 </footer>
- 
+
 <script>
   function toggleGroup(id) {
     const children = document.getElementById('children-' + id);
